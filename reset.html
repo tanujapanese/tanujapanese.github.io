@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reset password · Tanu</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .box { max-width: 420px; margin: 10vh auto 0; text-align: center; }
+    .box p { color: var(--muted); }
+    form { margin-top: 20px; text-align: left; }
+    label { display: block; font-weight: 600; margin: 14px 0 6px; }
+    input { width: 100%; font: inherit; padding: 12px 14px; border-radius: 12px;
+            border: 1px solid var(--line); background: var(--card); color: var(--ink); }
+    button { width: 100%; margin-top: 20px; padding: 14px; border: 0; border-radius: 14px;
+             background: var(--accent); color: #2b1606; font: inherit; font-weight: 800; cursor: pointer; }
+    button:disabled { opacity: .5; cursor: default; }
+    .error { color: #e5484d; min-height: 1.5em; margin-top: 10px; }
+  </style>
+</head>
+<body>
+<main>
+  <!-- The "Forgot password?" email in the Tanu app links here. Supabase signs
+       the visitor in for a moment (the token in the address) so they can set
+       a new password; the app then signs in with it. -->
+  <section class="box" id="loading"><p>One moment…</p></section>
+
+  <section class="box" id="form" hidden>
+    <h1>Choose a new password</h1>
+    <p>At least 8 characters.</p>
+    <form id="reset">
+      <label for="pw">New password</label>
+      <input id="pw" type="password" autocomplete="new-password" minlength="8" required>
+      <label for="pw2">Type it again</label>
+      <input id="pw2" type="password" autocomplete="new-password" minlength="8" required>
+      <button id="save" type="submit">Save new password</button>
+      <div class="error" id="error"></div>
+    </form>
+  </section>
+
+  <section class="box" id="done" hidden>
+    <div style="font-size:56px">✅</div>
+    <h1>Password changed</h1>
+    <p>Go back to the Tanu app and sign in with your email and your new password.</p>
+  </section>
+
+  <section class="box" id="expired" hidden>
+    <div style="font-size:56px">⏳</div>
+    <h1>This link has expired</h1>
+    <p>Reset links work once and only for a short time. In the Tanu app, tap <strong>Forgot password?</strong> again for a new one.</p>
+  </section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.1/dist/umd/supabase.js"></script>
+<script>
+  const db = supabase.createClient(
+    'https://gjgwbfrtmohudgjymkyf.supabase.co',
+    'sb_publishable_Y0AMdfHoeMqiUpDQEUOD_g_dZeefioF'
+  );
+  const show = (id) => {
+    for (const s of document.querySelectorAll('main > section')) s.hidden = s.id !== id;
+  };
+
+  (async () => {
+    if (/[#&?]error/.test(location.hash + location.search)) return show('expired');
+    // the client reads the token from the address and signs in for the reset
+    const { data } = await db.auth.getSession();
+    show(data.session ? 'form' : 'expired');
+  })();
+
+  document.getElementById('reset').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const pw = document.getElementById('pw').value;
+    const err = document.getElementById('error');
+    const btn = document.getElementById('save');
+    err.textContent = '';
+    if (pw.length < 8) return (err.textContent = 'Use at least 8 characters.');
+    if (pw !== document.getElementById('pw2').value) return (err.textContent = "The two passwords don't match.");
+    btn.disabled = true;
+    const { error } = await db.auth.updateUser({ password: pw });
+    btn.disabled = false;
+    if (error) return (err.textContent = error.message || 'Something went wrong. Please try again.');
+    await db.auth.signOut({ scope: 'local' });
+    show('done');
+  });
+</script>
+</body>
+</html>
