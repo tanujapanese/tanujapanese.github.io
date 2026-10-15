@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Email confirmed · Tanu</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .done { text-align: center; padding-top: 12vh; }
+    .done .mark { font-size: 56px; line-height: 1; }
+    .done h1 { margin-top: 16px; }
+    .done p { color: var(--muted); max-width: 420px; margin: 8px auto 0; }
+  </style>
+</head>
+<body>
+<main>
+  <!-- Supabase sends people here after they tap the link in the sign-up email.
+       It adds #error=... to the address when the link was old or used already. -->
+  <section class="done" id="ok">
+    <div class="mark">✅</div>
+    <h1>Your email is confirmed</h1>
+    <p>Go back to the Tanu app and sign in with your email and password.</p>
+  </section>
+  <section class="done" id="failed" hidden>
+    <div class="mark">⏳</div>
+    <h1>This link has expired</h1>
+    <p>Links in the email only work once and for a limited time. Open Tanu and sign in with your email and password. If it still asks you to confirm, email <a href="mailto:tanuhelp.app@gmail.com">tanuhelp.app@gmail.com</a>.</p>
+  </section>
+</main>
+<script>
+  if (/[#&?]error/.test(location.hash + location.search)) {
+    document.getElementById('ok').hidden = true;
+    document.getElementById('failed').hidden = false;
+  }
+</script>
+</body>
+</html>
