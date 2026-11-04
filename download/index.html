@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Download Tanu</title>
+  <meta name="apple-itunes-app" content="app-id=6822796922">
+  <link rel="icon" href="../img/favicon.png">
+  <link rel="apple-touch-icon" href="../img/apple-touch-icon.png">
+  <meta property="og:title" content="Download Tanu: Learn Japanese from real videos">
+  <meta property="og:image" content="https://tanujapanese.github.io/img/icon.png">
+  <style>
+    :root { --bg: #fffaf3; --ink: #3f2a1c; --muted: #7a6353; --btn: #1c1410; --btn-ink: #fff; }
+    @media (prefers-color-scheme: dark) {
+      :root { --bg: #191512; --ink: #fff1df; --muted: #cfbaa7; --btn: #fff; --btn-ink: #1c1410; }
+    }
+    body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; text-align: center;
+      background: var(--bg); color: var(--ink); font: 17px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; padding: 24px; box-sizing: border-box; }
+    img { width: 96px; height: 96px; border-radius: 22px; margin: 0 auto 14px; display: block; }
+    h1 { font-size: 26px; margin: 0 0 4px; }
+    p { color: var(--muted); margin: 0 0 22px; }
+    a.store { display: inline-block; background: var(--btn); color: var(--btn-ink); text-decoration: none; font-weight: 700; padding: 14px 26px; border-radius: 14px; }
+    .home { display: block; margin-top: 18px; color: var(--muted); font-size: 14px; }
+  </style>
+  <script src="../ig.js"></script>
+</head>
+<body data-ig-auto>
+<main>
+  <img src="../img/icon.png" alt="Tanu app icon">
+  <h1>Tanu</h1>
+  <p>Learn Japanese from real videos</p>
+  <a class="store" href="https://apps.apple.com/app/id6822796922" data-store>Open in the App Store</a>
+  <a class="home" href="/">What is Tanu?</a>
+</main>
+<script>
+  // Outside Instagram and the like, go straight to the App Store.
+  // Inside them, ig.js shows the "Open in Safari" box instead.
+  (function () {
+    var ua = navigator.userAgent || '';
+    var inApp = /Instagram|FBAN|FBAV|FB_IAB|TikTok|musical_ly|Line\//i.test(ua);
+    var ios = /iPhone|iPad|iPod/i.test(ua);
+    if (!(inApp && ios)) window.location.replace('https://apps.apple.com/app/id6822796922');
+  })();
+</script>
+</body>
+</html>

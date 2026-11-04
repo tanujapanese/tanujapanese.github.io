@@ -3,28 +3,227 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Tanu · Learn real Japanese from anime and videos</title>
-  <meta name="description" content="Tanu: learn real Japanese from anime and real videos. Tap any word for its meaning, save words, and review them.">
-  <link rel="stylesheet" href="style.css">
+  <title>Tanu: Learn Japanese from real videos</title>
+  <meta name="description" content="Learn real Japanese one short clip at a time. Tap any word for its meaning, save it, and review it with flashcards. For beginner to intermediate learners.">
+  <!-- Safari shows Apple's "Get / Open" bar at the top of the page -->
+  <meta name="apple-itunes-app" content="app-id=6822796922">
+  <meta name="theme-color" content="#fffaf3">
+  <link rel="icon" href="img/favicon.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <!-- the preview card when the link is shared (Instagram DMs, iMessage...) -->
+  <meta property="og:title" content="Tanu: Learn Japanese from real videos">
+  <meta property="og:description" content="Short clips of real Japanese. Tap any word, save it, review it.">
+  <meta property="og:image" content="https://tanujapanese.github.io/img/icon.png">
+  <meta property="og:type" content="website">
+  <style>
+    :root {
+      --bg: #fffaf3; --bg2: #fff1e2; --card: #ffffff;
+      --ink: #3f2a1c; --muted: #7a6353; --accent: #ff8b38; --accent-ink: #c4601a;
+      --line: #eadfd3; --btn: #1c1410; --btn-ink: #ffffff;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #191512; --bg2: #221b16; --card: #2c231d;
+        --ink: #fff1df; --muted: #cfbaa7; --accent: #ff8b38; --accent-ink: #ffa25e;
+        --line: #49382c; --btn: #ffffff; --btn-ink: #1c1410;
+      }
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0; background: var(--bg); color: var(--ink);
+      font: 17px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+    a { color: var(--accent-ink); }
+    img { max-width: 100%; display: block; }
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+
+    /* header */
+    header .wrap { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-size: 28px; font-weight: 900; letter-spacing: -1px; color: var(--ink); text-decoration: none; }
+    .brand img { width: 36px; height: 36px; border-radius: 9px; }
+    .brand .word span { color: var(--accent); }
+    header nav a { color: var(--muted); text-decoration: none; font-weight: 600; margin-left: 18px; font-size: 15px; }
+
+    /* App Store button */
+    .store {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--btn); color: var(--btn-ink); text-decoration: none;
+      padding: 10px 20px 10px 16px; border-radius: 14px; line-height: 1.1;
+    }
+    .store svg { width: 26px; height: 32px; fill: currentColor; }
+    .store small { display: block; font-size: 11px; font-weight: 500; }
+    .store b { display: block; font-size: 21px; font-weight: 600; letter-spacing: -0.3px; }
+    .store-note { color: var(--muted); font-size: 14px; margin: 10px 0 0; }
+
+    /* hero */
+    .hero { padding: 28px 0 56px; }
+    .hero .wrap { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 40px; align-items: center; }
+    .hero h1 { font-size: 52px; line-height: 1.08; letter-spacing: -1.5px; margin: 0 0 16px; }
+    .hero h1 em { font-style: normal; color: var(--accent); }
+    .hero p.lead { font-size: 20px; color: var(--muted); margin: 0 0 26px; max-width: 30em; }
+    .hero-art { position: relative; }
+    .hero-art .tanu { position: absolute; width: 44%; left: -18%; bottom: 4%; z-index: 2; filter: drop-shadow(0 10px 18px rgba(63,42,28,.18)); }
+
+    /* phone frame around a screenshot */
+    .phone {
+      width: 100%; max-width: 300px; margin: 0 auto;
+      border-radius: 40px; padding: 9px; background: #120d0a;
+      box-shadow: 0 24px 60px rgba(63,42,28,.25);
+    }
+    .phone img { border-radius: 32px; width: 100%; height: auto; }
+
+    /* feature rows */
+    .features { background: var(--bg2); padding: 64px 0; }
+    .feature { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; padding: 28px 0; }
+    .feature:nth-child(even) .copy { order: 2; }
+    .feature h2 { font-size: 34px; line-height: 1.15; letter-spacing: -0.8px; margin: 0 0 12px; }
+    .feature p { color: var(--muted); font-size: 18px; margin: 0 0 10px; }
+    .feature .tag { display: inline-block; color: var(--accent-ink); font-weight: 800; font-size: 13px; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 8px; }
+    .feature .mascot { width: 120px; margin-top: 14px; }
+
+    /* FAQ */
+    .faq { padding: 64px 0 0; }
+    .faq h2 { text-align: center; font-size: 30px; margin: 0 0 20px; }
+    .faq dl { max-width: 720px; margin: 0 auto; }
+    .faq dt { font-weight: 800; margin-top: 18px; }
+    .faq dd { margin: 4px 0 0; color: var(--muted); }
+
+    /* final call */
+    .final { text-align: center; padding: 64px 0 56px; }
+    .final img.mascot { width: 160px; margin: 0 auto 8px; }
+    .final h2 { font-size: 36px; letter-spacing: -0.8px; margin: 0 0 8px; }
+    .final p { color: var(--muted); margin: 0 0 22px; }
+
+    footer { border-top: 1px solid var(--line); padding: 22px 0 40px; color: var(--muted); font-size: 14px; }
+    footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    footer a { color: var(--muted); margin-right: 16px; }
+
+    @media (max-width: 760px) {
+      header nav { display: none; }
+      .hero { padding: 8px 0 40px; text-align: center; }
+      .hero .wrap { grid-template-columns: 1fr; gap: 28px; }
+      .hero h1 { font-size: 38px; }
+      .hero p.lead { font-size: 18px; margin-left: auto; margin-right: auto; }
+      .hero-art { max-width: 260px; margin: 0 auto; }
+      .hero-art .tanu { width: 46%; left: -22%; }
+      .features { padding: 32px 0; }
+      .feature { grid-template-columns: 1fr; gap: 22px; text-align: center; padding: 24px 0; }
+      .feature:nth-child(even) .copy { order: 0; }
+      .feature h2 { font-size: 28px; }
+      .feature .mascot { margin: 12px auto 0; }
+      .phone { max-width: 250px; }
+    }
+  </style>
 </head>
 <body>
-<main>
-  <header>
-    <a class="brand" href="index.html">tanu<span>.</span></a>
-    <nav><a href="support.html">Support</a><a href="terms.html">Terms</a><a href="privacy.html">Privacy</a></nav>
-  </header>
 
-  <section class="hero">
-    <h1>Learn real Japanese from anime and real videos.</h1>
-    <p>Watch short clips, tap any word for its meaning and reading, save the words you like, and review them with Tanu.</p>
-    <div class="links">
-      <a href="support.html">Support</a>
-      <a href="privacy.html">Privacy Policy</a>
-      <a href="terms.html">Terms of Service</a>
+<header>
+  <div class="wrap">
+    <a class="brand" href="/"><img src="img/icon.png" alt=""><span class="word">tanu<span>.</span></span></a>
+    <nav><a href="/support">Support</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <h1>Learn real Japanese, <em>one clip at a time.</em></h1>
+      <p class="lead">Short clips of real Japanese with subtitles you can tap. Furigana, romaji and English on every line, and every word explained.</p>
+      <a class="store" href="https://apps.apple.com/app/id6822796922" data-store>
+        <svg viewBox="0 0 384 512" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+        <span><small>Download on the</small><b>App Store</b></span>
+      </a>
+      <p class="store-note">Available on iPhone. Android coming soon.</p>
     </div>
-  </section>
+    <div class="hero-art">
+      <img class="tanu" src="img/tanu-hi.png" alt="Tanu the tanuki waving">
+      <div class="phone"><img src="img/feed.jpg" alt="The Tanu feed: a video clip with Japanese subtitles, furigana, romaji and English" width="600" height="1304"></div>
+    </div>
+  </div>
+</section>
 
-  <footer>© 2026 Tanu · Contact: <a href="mailto:tanuhelp.app@gmail.com">tanuhelp.app@gmail.com</a></footer>
-</main>
+<section class="features">
+  <div class="wrap">
+
+    <div class="feature">
+      <div class="copy">
+        <span class="tag">Tap any word</span>
+        <h2>Every word, explained in context.</h2>
+        <p>Tap a word to see its reading and what it means in this exact line, plus a simple explanation of how it's used.</p>
+        <p>Like it? Add it to your deck with one tap.</p>
+      </div>
+      <div class="phone"><img src="img/word.jpg" alt="A word card for 動画 with its meanings and an explanation" width="600" height="1304" loading="lazy"></div>
+    </div>
+
+    <div class="feature">
+      <div class="copy">
+        <span class="tag">Words that stick</span>
+        <h2>Review with flashcards, at the right time.</h2>
+        <p>Your saved words come back as flashcards just before you'd forget them, each one with the line you heard it in.</p>
+        <img class="mascot" src="img/tanu-study.png" alt="" loading="lazy">
+      </div>
+      <div class="phone"><img src="img/review.jpg" alt="A flashcard for 面白いです with its meaning and the clip it came from" width="600" height="1304" loading="lazy"></div>
+    </div>
+
+    <div class="feature">
+      <div class="copy">
+        <span class="tag">Made for your level</span>
+        <h2>A feed that grows with you.</h2>
+        <p>Tell Tanu your level and what you enjoy. Your feed is matched to you, from beginner to intermediate.</p>
+        <p>Search any word to hear it used by real people in real clips.</p>
+      </div>
+      <div class="phone"><img src="img/explore.jpg" alt="Explore: searching for 同じ shows clips where it's spoken" width="600" height="1304" loading="lazy"></div>
+    </div>
+
+    <div class="feature">
+      <div class="copy">
+        <span class="tag">A little every day</span>
+        <h2>Ten minutes a day, with Tanu cheering you on.</h2>
+        <p>Set a daily goal, keep your streak and watch your word count grow.</p>
+        <img class="mascot" src="img/tanu-ramen.png" alt="" loading="lazy">
+      </div>
+      <div class="phone"><img src="img/journey.jpg" alt="Journey: daily goal, words learned and day streak" width="600" height="1300" loading="lazy"></div>
+    </div>
+
+  </div>
+</section>
+
+<section class="faq">
+  <div class="wrap">
+    <h2>Questions</h2>
+    <dl>
+      <dt>Who is Tanu for?</dt>
+      <dd>Beginner to intermediate learners who want to understand real, everyday Japanese.</dd>
+      <dt>How much does it cost?</dt>
+      <dd>Tanu Pro is a subscription, monthly or yearly. The yearly plan starts with a 7-day free trial. You can cancel any time in your iPhone's settings.</dd>
+      <dt>Is there an Android version?</dt>
+      <dd>Not yet, but it's coming soon. Tanu is on iPhone for now.</dd>
+      <dt>I need help.</dt>
+      <dd>Email us at <a href="mailto:tanuhelp.app@gmail.com">tanuhelp.app@gmail.com</a> or see <a href="/support">Support</a>.</dd>
+    </dl>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <img class="mascot" src="img/tanu-yay.png" alt="" loading="lazy">
+    <h2>Start learning with Tanu</h2>
+    <p>Real Japanese, one clip at a time.</p>
+    <a class="store" href="https://apps.apple.com/app/id6822796922" data-store>
+      <svg viewBox="0 0 384 512" aria-hidden="true"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+      <span><small>Download on the</small><b>App Store</b></span>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div><a href="/support">Support</a><a href="/terms">Terms</a><a href="/privacy">Privacy</a></div>
+    <div>© 2026 Tanu · <a href="mailto:tanuhelp.app@gmail.com">tanuhelp.app@gmail.com</a></div>
+  </div>
+</footer>
+
+<script src="ig.js"></script>
 </body>
 </html>
