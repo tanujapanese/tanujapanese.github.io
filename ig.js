@@ -12,10 +12,11 @@
   if (!inApp || !ios) return;
 
   var css = '' +
-    '.igbox-bg{position:fixed;inset:0;background:rgba(40,25,15,.55);display:none;align-items:flex-end;justify-content:center;z-index:99}' +
+    '.igbox-bg{position:fixed;inset:0;background:rgba(40,25,15,.55);display:none;align-items:center;justify-content:center;padding:70px 20px 20px;z-index:99}' +
     '.igbox-bg.show{display:flex}' +
-    '.igbox{position:relative;background:#fffaf3;color:#3f2a1c;border-radius:28px 28px 0 0;padding:64px 24px calc(22px + env(safe-area-inset-bottom));max-width:480px;width:100%;text-align:center;font:16px/1.5 -apple-system,BlinkMacSystemFont,sans-serif;animation:igup .28s ease-out}' +
-    '@keyframes igup{from{transform:translateY(100%)}to{transform:none}}' +
+    'body.igopen>*:not(.igbox-bg){visibility:hidden}' +
+    '.igbox{position:relative;background:#fffaf3;color:#3f2a1c;border-radius:28px;padding:64px 24px 18px;max-width:400px;width:100%;text-align:center;font:16px/1.5 -apple-system,BlinkMacSystemFont,sans-serif;animation:igpop .25s ease-out}' +
+    '@keyframes igpop{from{transform:scale(.92);opacity:0}to{transform:none;opacity:1}}' +
     '.igbox img{position:absolute;left:50%;top:-58px;transform:translateX(-50%);width:120px;height:auto}' +
     '.igbox h2{font-size:26px;font-weight:900;letter-spacing:-.5px;margin:0 0 6px}' +
     '.igbox p{color:#7a6353;margin:0 0 20px}' +
@@ -46,8 +47,8 @@
 
   ready(function () {
     document.body.appendChild(bg);
-    var open = function () { bg.classList.add('show'); };
-    var close = function () { bg.classList.remove('show'); };
+    var open = function () { bg.classList.add('show'); document.body.classList.add('igopen'); };
+    var close = function () { bg.classList.remove('show'); document.body.classList.remove('igopen'); };
     bg.querySelector('.later').onclick = close;
     bg.onclick = function (e) { if (e.target === bg) close(); };
 
