@@ -1,6 +1,7 @@
 // Instagram, Facebook and TikTok open links in their own mini browser, which
 // cannot open the App Store. There (on iPhone), an App Store button shows a box
-// that reopens this site in Safari (x-safari-https://, which iOS asks to
+// that reopens this site in Safari (Instagram's own extbrowser link, or iOS's
+// x-safari-https:// elsewhere; iOS asks to
 // confirm), with the manual steps and a copy-the-link button as backups.
 // <body data-ig-auto> shows the box as soon as the page loads (used by /download).
 (function () {
@@ -52,7 +53,14 @@
 
     // reopen the /download page in Safari: there it goes straight to the App Store
     bg.querySelector('.go').onclick = function () {
-      window.location.href = 'x-safari-' + location.origin + '/download/';
+      // Instagram and Threads have their own "open in external browser" link;
+      // other in-app browsers get iOS's x-safari- link.
+      var url = location.origin + '/download/';
+      if (/Instagram|Barcelona/i.test(ua)) {
+        window.location.href = 'instagram://extbrowser/?url=' + encodeURIComponent(url);
+      } else {
+        window.open('x-safari-' + url, '_blank');
+      }
     };
 
     var copyBtn = bg.querySelector('.copy');
